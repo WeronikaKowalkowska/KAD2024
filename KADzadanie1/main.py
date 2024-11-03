@@ -28,6 +28,7 @@ for i in range(0,len(gatunek)):
     else:
         liczebnoscVir += 1
 
+
 liczebnoscCala=liczebnoscSet+liczebnoscVer+liczebnoscVir
 col_names=["gatunek","liczebnosc", "%"]
 table_data=[["setosa",liczebnoscSet, liczebnoscSet/liczebnoscCala*100],
@@ -36,4 +37,11 @@ table_data=[["setosa",liczebnoscSet, liczebnoscSet/liczebnoscCala*100],
             ["razem",liczebnoscCala,100]]
 print(tabulate(table_data,headers=col_names))
 
+print("\n")
+col_names2=["cecha", "minimum","srednia ar", "odch standard", "mediana", "q1", "q3", "maksimum"]
+table_data2=[["długość działki kielicha", min(dlKielicha), np.mean(dlKielicha), np.std(dlKielicha), np.median(dlKielicha), 0,0,max(dlKielicha)],
+            ["szerokość działki kielicha", min(szerKielicha), np.mean(szerKielicha), np.std(szerKielicha), np.median(szerKielicha), 0,0,max(szerKielicha)],
+            ["długość płatka", min(dlPlatka), np.mean(dlPlatka), np.std(dlPlatka), np.median(dlPlatka), 0,0,max(dlPlatka)],
+            ["szerokość płatka", min(szerPlatka), np.mean(szerPlatka), np.std(szerPlatka), np.median(szerPlatka), 0,0,max(szerPlatka),]]
+print(tabulate(table_data2,headers=col_names2))
 
