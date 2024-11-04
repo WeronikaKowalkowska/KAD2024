@@ -123,4 +123,63 @@ plt.show()
 # Wykres pudełkowy szerokości płatka
 
 
+# Współczynnik korelacji liniowej Pearsona (szerokość i długość działki kielicha)
+wPSZkDk = pd.DataFrame (columns = ['Długość działki kielicha (cm)', 'Szerokość działki kielicha (cm)'])
+wPSZkDk['Długość działki kielicha (cm)'] = dlKielicha
+wPSZkDk['Szerokość działki kielicha (cm)'] = szerKielicha
+wPSZkDk_value = wPSZkDk.corr('pearson').loc['Długość działki kielicha (cm)', 'Szerokość działki kielicha (cm)']
 
+# Współczynnik korelacji liniowej Pearsona (szerokość płatka i długość działki kielicha)
+wPSZpDk = pd.DataFrame (columns = ['Długość działki kielicha (cm)', 'Szerokość płatka (cm)'])
+wPSZpDk['Długość działki kielicha (cm)'] = dlKielicha
+wPSZpDk['Szerokość płatka (cm)'] = szerPlatka
+wPSZpDk_value = wPSZpDk.corr('pearson').loc['Długość działki kielicha (cm)', 'Szerokość płatka (cm)']
+
+# Współczynnik korelacji liniowej Pearsona (szerokość płatka i szerokość działki kielicha)
+wPSZpSZk = pd.DataFrame (columns = ['Szerokość działki kielicha (cm)', 'Szerokość płatka (cm)'])
+wPSZpSZk['Szerokość działki kielicha (cm)'] = szerKielicha
+wPSZpSZk['Szerokość płatka (cm)'] = szerPlatka
+wPSZpSZk_value = wPSZpSZk.corr('pearson').loc['Szerokość działki kielicha (cm)', 'Szerokość płatka (cm)']
+
+# Współczynnik korelacji liniowej Pearsona (długość płatka i długość działki kielicha)
+wPDpDk = pd.DataFrame (columns = ['Długość działki kielicha (cm)', 'Długość płatka (cm)'])
+wPDpDk['Długość działki kielicha (cm)'] = dlKielicha
+wPDpDk['Długość płatka (cm)'] = dlPlatka
+wPDpDk_value = wPDpDk.corr('pearson').loc['Długość działki kielicha (cm)', 'Długość płatka (cm)']
+
+# Współczynnik korelacji liniowej Pearsona (długość płatka i szerokość działki kielicha)
+wPDpSZk = pd.DataFrame (columns = ['Szerokość działki kielicha (cm)', 'Długość płatka (cm)'])
+wPDpSZk['Szerokość działki kielicha (cm)'] = szerKielicha
+wPDpSZk['Długość płatka (cm)'] = dlPlatka
+wPDpSZk_value= wPDpSZk.corr('pearson').loc['Szerokość działki kielicha (cm)', 'Długość płatka (cm)']
+
+# Współczynnik korelacji liniowej Pearsona (długość płatka i szerokość płatka)
+wPDpSZp = pd.DataFrame (columns = ['Długość płatka (cm)', 'Szerokość płatka (cm)'])
+wPDpSZp['Szerokość płatka (cm)'] = szerPlatka
+wPDpSZp['Długość płatka (cm)'] = dlPlatka
+wPDpSZp_value= wPDpSZp.corr('pearson').loc['Długość płatka (cm)', 'Szerokość płatka (cm)']
+
+
+
+# Wykres punktowy (szerokość i długość działki kielicha)
+plt.scatter(wPSZkDk['Długość działki kielicha (cm)'], wPSZkDk['Szerokość działki kielicha (cm)'], marker='o')
+plt.title("r = " + str(wPSZkDk_value.round(2)) + "; y =")
+plt.xlabel('Długość działki kielicha (cm)')
+plt.ylabel('Szerokość działki kielicha (cm)')
+# plt.xlim(4, 8)
+# plt.xticks(np.arange(4, 9, 1))
+plt.show()
+
+# Wykres punktowy (szerokość płatka i długość działki kielicha)
+plt.scatter(wPSZpDk['Długość działki kielicha (cm)'], wPSZpDk['Szerokość płatka (cm)'], marker='o')
+plt.title("r = " + str(wPSZpDk_value.round(2)) + "; y =")
+plt.xlabel('Długość działki kielicha (cm)')
+plt.ylabel('Szerokość płatka (cm)')
+plt.show()
+
+# Wykres punktowy (szerokość płatka i szerokość działki kielicha)
+plt.scatter(wPSZpSZk['Szerokość działki kielicha (cm)'], wPSZpSZk['Szerokość płatka (cm)'], marker='o')
+plt.title("r = " + str(wPSZpSZk_value.round(2)) + "; y =")
+plt.xlabel('Szerokość działki kielicha (cm)')
+plt.ylabel('Szerokość płatka (cm)')
+plt.show()
