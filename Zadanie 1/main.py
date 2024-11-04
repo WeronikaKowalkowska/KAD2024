@@ -53,7 +53,7 @@ charakterystyka = pd.DataFrame(columns=['Minimum', 'Śr. arytm.', '± Odch. stan
 
 charakterystyka.loc["Długość działki kielicha (cm)", "Minimum"] = dlKielicha.min()
 charakterystyka.loc["Długość działki kielicha (cm)", "Śr. arytm."] = dlKielicha.mean()
-charakterystyka.loc["Długość działki kielicha (cm)", "± Odch. stand."] = dlKielicha.std()
+charakterystyka.loc["Długość działki kielicha (cm)", "± Odch. stand."] = (dane['Sepal length']).std()
 charakterystyka.loc["Długość działki kielicha (cm)", "Q1"] = (dane['Sepal length']).quantile(0.25)
 charakterystyka.loc["Długość działki kielicha (cm)", "Q3"] = (dane['Sepal length']).quantile(0.75)
 charakterystyka.loc["Długość działki kielicha (cm)", "Mediana"] = np.median(dlKielicha)
@@ -61,7 +61,7 @@ charakterystyka.loc["Długość działki kielicha (cm)", "Maksimum"] = dlKielich
 
 charakterystyka.loc["Szerokość działki kielicha (cm)", "Minimum"] = szerKielicha.min()
 charakterystyka.loc["Szerokość działki kielicha (cm)", "Śr. arytm."] = szerKielicha.mean()
-charakterystyka.loc["Szerokość działki kielicha (cm)", "± Odch. stand."] = szerKielicha.std()
+charakterystyka.loc["Szerokość działki kielicha (cm)", "± Odch. stand."] = (dane['Sepal width']).std()
 charakterystyka.loc["Szerokość działki kielicha (cm)", "Q1"] = (dane['Sepal width']).quantile(0.25)
 charakterystyka.loc["Szerokość działki kielicha (cm)", "Q3"] = (dane['Sepal width']).quantile(0.75)
 charakterystyka.loc["Szerokość działki kielicha (cm)", "Mediana"] = np.median(szerKielicha)
