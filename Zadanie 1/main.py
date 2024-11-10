@@ -113,8 +113,9 @@ plt.show()
 
 
 ######################
+xAxisBins=[4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0]
 # Histogram długości płatka
-plt.hist(dane['Petal length'], bins=8, edgecolor='black', linewidth=1.5)
+plt.hist(dane['Petal length'], bins=xAxisBins, edgecolor='black', linewidth=1.5)
 plt.title('Długości płatka')
 plt.xlabel('Długość (cm)')
 plt.ylabel('Liczebność')
@@ -130,6 +131,7 @@ ax2.set_xlabel('Gatunek')
 ax2.set_ylabel('Długość (cm)')
 plt.show()
 
+xAxisBins=[2.5]
 # Histogram szerokości płatka
 plt.hist(dane['Petal width'], bins=8, edgecolor='black', linewidth=1.5)
 plt.title('Szerokość płatka')
@@ -184,27 +186,98 @@ wPDpSZp['Szerokość płatka (cm)'] = szerPlatka
 wPDpSZp['Długość płatka (cm)'] = dlPlatka
 wPDpSZp_value= wPDpSZp.corr('pearson').loc['Długość płatka (cm)', 'Szerokość płatka (cm)']
 
+##########
+#1- Linia regresji (Y- szerokość i X- długość działki kielicha)
+#a=cov(x,y)/var(x)
+#b=sr y - a * sr x
+"""
+covariance=np.cov(X, Y)
+a=covariance[0,1]/np.var(X)
+b=Y.mean()-a*X.mean()
+line=np.array(a*X+b)"""
 
+covariance=np.cov(dlKielicha, szerKielicha)
+rLSZkDk_a=covariance[0,1]/np.var(dlKielicha)
+rLSZkDk_b=szerKielicha.mean()-rLSZkDk_a*dlKielicha.mean()
+rLSZkDk_line=np.array(rLSZkDk_a*dlKielicha+rLSZkDk_b)
+
+#2- Linia regresji (szerokość płatka i X- długość działki kielicha)
+covariance=np.cov(dlKielicha, szerPlatka)
+rLSZpDk_a=covariance[0,1]/np.var(dlKielicha)
+rLSZpDk_b=szerPlatka.mean()-rLSZpDk_a*dlKielicha.mean()
+rLSZpDk_line=np.array(rLSZpDk_a*dlKielicha+rLSZpDk_b)
+
+#3- Linia regresji (szerokość płatka i X- szerokość działki kielicha)
+covariance=np.cov(szerKielicha, szerPlatka)
+rLSZpSZk_a=covariance[0,1]/np.var(szerKielicha)
+rLSZpSZk_b=szerPlatka.mean()-rLSZpSZk_a*szerKielicha.mean()
+rLSZpSZk_line=np.array(rLSZpSZk_a*szerKielicha+rLSZpSZk_b)
+
+#4- Linia regresji (długość płatka i X- długość działki kielicha)
+covariance=np.cov(dlKielicha, dlPlatka)
+rLDpDk_a=covariance[0,1]/np.var(dlKielicha)
+rLDpDk_b=dlPlatka.mean()-rLDpDk_a*dlKielicha.mean()
+rLDpDk_line=np.array(rLDpDk_a*dlKielicha+rLDpDk_b)
+
+#5- Linia regresji (długość płatka i X- szerokość działki kielicha)
+covariance=np.cov(szerKielicha, dlPlatka)
+rLDpSZk_a=covariance[0,1]/np.var(szerKielicha)
+rLDpSZk_b=dlPlatka.mean()-rLDpSZk_a*szerKielicha.mean()
+rLDpSZk_line=np.array(rLDpSZk_a*szerKielicha+rLDpSZk_b)
+
+#6- Linia regresji (X- długość płatka i szerokość płatka)
+covariance=np.cov(dlPlatka, szerPlatka)
+rLDpSZp_a=covariance[0,1]/np.var(dlPlatka)
+rLDpSZp_b=szerPlatka.mean()-rLDpSZp_a*dlPlatka.mean()
+rLDpSZp_line=np.array(rLDpSZp_a*dlPlatka+rLDpSZp_b)
+
+#########
 
 # Wykres punktowy (szerokość i długość działki kielicha)
 plt.scatter(wPSZkDk['Długość działki kielicha (cm)'], wPSZkDk['Szerokość działki kielicha (cm)'], marker='o')
-plt.title("r = " + str(wPSZkDk_value.round(2)) + "; y =")
+plt.title("r = " + str(wPSZkDk_value.round(2)) + "; y =" + str(rLSZkDk_a.round(1)) + "x + " + str(rLSZkDk_b.round(1)))
 plt.xlabel('Długość działki kielicha (cm)')
 plt.ylabel('Szerokość działki kielicha (cm)')
 # plt.xlim(4, 8)
 # plt.xticks(np.arange(4, 9, 1))
+plt.plot(wPSZkDk['Długość działki kielicha (cm)'], rLSZkDk_line, color = "r")
 plt.show()
 
 # Wykres punktowy (szerokość płatka i długość działki kielicha)
 plt.scatter(wPSZpDk['Długość działki kielicha (cm)'], wPSZpDk['Szerokość płatka (cm)'], marker='o')
-plt.title("r = " + str(wPSZpDk_value.round(2)) + "; y =")
+plt.title("r = " + str(wPSZpDk_value.round(2)) + "; y ="+ str(rLSZpDk_a.round(1)) + "x + " + str(rLSZpDk_b.round(1)))
 plt.xlabel('Długość działki kielicha (cm)')
 plt.ylabel('Szerokość płatka (cm)')
+plt.plot(wPSZpDk['Długość działki kielicha (cm)'], rLSZpDk_line, color = "r")
 plt.show()
 
 # Wykres punktowy (szerokość płatka i szerokość działki kielicha)
 plt.scatter(wPSZpSZk['Szerokość działki kielicha (cm)'], wPSZpSZk['Szerokość płatka (cm)'], marker='o')
-plt.title("r = " + str(wPSZpSZk_value.round(2)) + "; y =")
+plt.title("r = " + str(wPSZpSZk_value.round(2)) + "; y ="+ str(rLSZpSZk_a.round(1)) + "x + " + str(rLSZpSZk_b.round(1)))
+plt.ylabel('Szerokość płatka (cm)')
 plt.xlabel('Szerokość działki kielicha (cm)')
+plt.plot(wPSZpSZk['Szerokość działki kielicha (cm)'], rLSZpSZk_line, color = "r")
+plt.show()
+
+######
+# Wykres punktowy (długość płatka i długość działki kielicha)
+plt.scatter(wPDpDk['Długość działki kielicha (cm)'], wPDpDk['Długość płatka (cm)'], marker='o')
+plt.title("r = " + str(wPDpDk_value.round(2)) + "; y =")
+plt.xlabel('Długość działki kielicha (cm)')
+plt.ylabel('Długość płatka (cm)')
+plt.show()
+
+# Wykres punktowy (długość płatka i szerokość działki kielicha)
+plt.scatter(wPDpSZk['Długość płatka (cm)'], wPDpSZk['Szerokość działki kielicha (cm)'], marker='o')
+plt.title("r = " + str(wPDpSZk_value.round(2)) + "; y =")
+plt.xlabel('Szerokość działki kielicha (cm)')
+plt.ylabel('Długość płatka (cm)')
+plt.show()
+
+# Wykres punktowy (długość płatka i szerokość płatka)
+plt.scatter(wPDpSZp['Długość płatka (cm)'], wPDpSZp['Szerokość płatka (cm)'], marker='o')
+plt.title("r = " + str(wPDpSZp_value.round(2)) + "; y =")
+plt.xlabel('Długość płatka (cm)')
 plt.ylabel('Szerokość płatka (cm)')
 plt.show()
+#########
