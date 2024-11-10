@@ -77,8 +77,10 @@ daneSetosa = dane[dane['Species']==0]
 daneVersicolor = dane[dane['Species']==1]
 daneVirginica = dane[dane['Species']==2]
 
+
 # Histogram długości działki kielicha
-plt.hist(dane['Sepal length'], bins=8, edgecolor='black', linewidth=1.5)
+bins = np.arange(4, 8.5, 0.5)
+plt.hist(dane['Sepal length'], bins=bins, edgecolor='black', linewidth=1.5)
 plt.title('Długość działki kielicha')
 plt.xlabel('Długość (cm)')
 plt.ylabel('Liczebność')
@@ -95,7 +97,8 @@ ax.set_ylabel('Długość (cm)')
 plt.show()
 
 # Histogram szerokości działki kielicha
-plt.hist(dane['Sepal width'], bins=8, edgecolor='black', linewidth=1.5)
+bins2 = np.arange(2, 4.6, 0.25)
+plt.hist(dane['Sepal width'], bins=bins2, edgecolor='black', linewidth=1.5)
 plt.title('Szerokość działki kielicha')
 plt.xlabel('Szerokość (cm)')
 plt.ylabel('Liczebność')
@@ -148,7 +151,7 @@ plt.title('Szerokość płatka')
 ax3.set_xlabel('Gatunek')
 ax3.set_ylabel('Szerokość (cm)')
 plt.show()
-#######
+######
 
 # Współczynnik korelacji liniowej Pearsona (szerokość i długość działki kielicha)
 wPSZkDk = pd.DataFrame (columns = ['Długość działki kielicha (cm)', 'Szerokość działki kielicha (cm)'])
