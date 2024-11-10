@@ -115,16 +115,38 @@ ax1.set_ylabel('Szerokość (cm)')
 plt.show()
 
 # Histogram długości płatka
-
+plt.hist(dane['Petal length'], bins=8, edgecolor='black', linewidth=1.5)
+plt.title('Długości płatka')
+plt.xlabel('Długość (cm)')
+plt.ylabel('Liczebność')
+plt.show()
 
 # Wykres pudełkowy długości płatka
+petalLengthByType = [daneSetosa['Petal length'], daneVersicolor['Petal length'], daneVirginica['Petal length']]
 
+fig2,ax2 = plt.subplots()
+ax2.boxplot(petalLengthByType, tick_labels=['setosa', 'versicolor', 'virginica'])
+plt.title('Długość płatka')
+ax2.set_xlabel('Gatunek')
+ax2.set_ylabel('Długość (cm)')
+plt.show()
 
 # Histogram szerokości płatka
-
+plt.hist(dane['Petal width'], bins=8, edgecolor='black', linewidth=1.5)
+plt.title('Szerokość płatka')
+plt.xlabel('Szerokść (cm)')
+plt.ylabel('Liczebność')
+plt.show()
 
 # Wykres pudełkowy szerokości płatka
+petalWidthByType = [daneSetosa['Petal width'], daneVersicolor['Petal length'], daneVirginica['Petal length']]
 
+fig3,ax3 = plt.subplots()
+ax3.boxplot(petalWidthByType, tick_labels=['setosa', 'versicolor', 'virginica'])
+plt.title('Szerokość płatka')
+ax3.set_xlabel('Gatunek')
+ax3.set_ylabel('Szerokość (cm)')
+plt.show()
 
 # Współczynnik korelacji liniowej Pearsona (szerokość i długość działki kielicha)
 wPSZkDk = pd.DataFrame (columns = ['Długość działki kielicha (cm)', 'Szerokość działki kielicha (cm)'])
