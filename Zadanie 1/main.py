@@ -30,7 +30,6 @@ liczebnoscCala=liczebnoscSet+liczebnoscVer+liczebnoscVir
 
 # Liczności poszczególnych gatunków
 
-
 gatunki_liczebność = pd.DataFrame(columns=['Liczebność'])
 gatunki_liczebność.loc['Setosa'] = liczebnoscSet
 gatunki_liczebność.loc['Versicolor'] = liczebnoscVer
@@ -66,6 +65,22 @@ charakterystyka.loc["Szerokość działki kielicha (cm)", "Q1"] = (dane['Sepal w
 charakterystyka.loc["Szerokość działki kielicha (cm)", "Q3"] = (dane['Sepal width']).quantile(0.75)
 charakterystyka.loc["Szerokość działki kielicha (cm)", "Mediana"] = np.median(szerKielicha)
 charakterystyka.loc["Szerokość działki kielicha (cm)", "Maksimum"] = szerKielicha.max()
+
+charakterystyka.loc["Długość płatka (cm)", "Minimum"] = dlPlatka.min()
+charakterystyka.loc["Długość płatka (cm)", "Śr. arytm."] = dlPlatka.mean()
+charakterystyka.loc["Długość płatka (cm)", "± Odch. stand."] = (dane['Petal length']).std()
+charakterystyka.loc["Długość płatka (cm)", "Q1"] = (dane['Petal length']).quantile(0.25)
+charakterystyka.loc["Długość płatka (cm)", "Q3"] = (dane['Petal length']).quantile(0.75)
+charakterystyka.loc["Długość płatka (cm)", "Mediana"] = np.median(dlPlatka)
+charakterystyka.loc["Długość płatka (cm)", "Maksimum"] = dlPlatka.max()
+
+charakterystyka.loc["Szerokość płatka (cm)", "Minimum"] = szerPlatka.min()
+charakterystyka.loc["Szerokość płatka (cm)", "Śr. arytm."] = szerPlatka.mean()
+charakterystyka.loc["Szerokość płatka (cm)", "± Odch. stand."] = (dane['Petal width']).std()
+charakterystyka.loc["Szerokość płatka (cm)", "Q1"] = (dane['Petal width']).quantile(0.25)
+charakterystyka.loc["Szerokość płatka (cm)", "Q3"] = (dane['Petal width']).quantile(0.75)
+charakterystyka.loc["Szerokość płatka (cm)", "Mediana"] = np.median(szerPlatka)
+charakterystyka.loc["Szerokość płatka (cm)", "Maksimum"] = szerPlatka.max()
 
 pd.set_option('display.float_format', '{:.2f}'.format)
 print('Charakterystyka cech irysów:')
@@ -115,9 +130,8 @@ ax1.set_ylabel('Szerokość (cm)')
 plt.show()
 
 
-######################
-xAxisBins=[4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0]
 # Histogram długości płatka
+xAxisBins=[1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0,4.5,5.0,5.5,6.0,6.5,7.0]
 plt.hist(dane['Petal length'], bins=xAxisBins, edgecolor='black', linewidth=1.5)
 plt.title('Długości płatka')
 plt.xlabel('Długość (cm)')
@@ -134,16 +148,17 @@ ax2.set_xlabel('Gatunek')
 ax2.set_ylabel('Długość (cm)')
 plt.show()
 
-xAxisBins=[2.5]
+
 # Histogram szerokości płatka
-plt.hist(dane['Petal width'], bins=8, edgecolor='black', linewidth=1.5)
+xAxisBins=np.arange(0, 3, 0.25)
+plt.hist(dane['Petal width'], bins=xAxisBins, edgecolor='black', linewidth=1.5)
 plt.title('Szerokość płatka')
 plt.xlabel('Szerokść (cm)')
 plt.ylabel('Liczebność')
 plt.show()
 
 # Wykres pudełkowy szerokości płatka
-petalWidthByType = [daneSetosa['Petal width'], daneVersicolor['Petal length'], daneVirginica['Petal length']]
+petalWidthByType = [daneSetosa['Petal width'], daneVersicolor['Petal width'], daneVirginica['Petal width']]
 
 fig3,ax3 = plt.subplots()
 ax3.boxplot(petalWidthByType, tick_labels=['setosa', 'versicolor', 'virginica'])
@@ -151,7 +166,6 @@ plt.title('Szerokość płatka')
 ax3.set_xlabel('Gatunek')
 ax3.set_ylabel('Szerokość (cm)')
 plt.show()
-######
 
 # Współczynnik korelacji liniowej Pearsona (szerokość i długość działki kielicha)
 wPSZkDk = pd.DataFrame (columns = ['Długość działki kielicha (cm)', 'Szerokość działki kielicha (cm)'])
@@ -189,16 +203,14 @@ wPDpSZp['Szerokość płatka (cm)'] = szerPlatka
 wPDpSZp['Długość płatka (cm)'] = dlPlatka
 wPDpSZp_value= wPDpSZp.corr('pearson').loc['Długość płatka (cm)', 'Szerokość płatka (cm)']
 
-##########
-#1- Linia regresji (Y- szerokość i X- długość działki kielicha)
 #a=cov(x,y)/var(x)
 #b=sr y - a * sr x
-"""
-covariance=np.cov(X, Y)
+"""covariance=np.cov(X, Y)
 a=covariance[0,1]/np.var(X)
 b=Y.mean()-a*X.mean()
 line=np.array(a*X+b)"""
 
+#1- Linia regresji (Y- szerokość i X- długość działki kielicha)
 covariance=np.cov(dlKielicha, szerKielicha)
 rLSZkDk_a=covariance[0,1]/np.var(dlKielicha)
 rLSZkDk_b=szerKielicha.mean()-rLSZkDk_a*dlKielicha.mean()
@@ -234,8 +246,6 @@ rLDpSZp_a=covariance[0,1]/np.var(dlPlatka)
 rLDpSZp_b=szerPlatka.mean()-rLDpSZp_a*dlPlatka.mean()
 rLDpSZp_line=np.array(rLDpSZp_a*dlPlatka+rLDpSZp_b)
 
-#########
-
 # Wykres punktowy (szerokość i długość działki kielicha)
 plt.scatter(wPSZkDk['Długość działki kielicha (cm)'], wPSZkDk['Szerokość działki kielicha (cm)'], marker='o')
 plt.title("r = " + str(wPSZkDk_value.round(2)) + "; y =" + str(rLSZkDk_a.round(1)) + "x + " + str(rLSZkDk_b.round(1)))
@@ -262,25 +272,26 @@ plt.xlabel('Szerokość działki kielicha (cm)')
 plt.plot(wPSZpSZk['Szerokość działki kielicha (cm)'], rLSZpSZk_line, color = "r")
 plt.show()
 
-######
 # Wykres punktowy (długość płatka i długość działki kielicha)
 plt.scatter(wPDpDk['Długość działki kielicha (cm)'], wPDpDk['Długość płatka (cm)'], marker='o')
-plt.title("r = " + str(wPDpDk_value.round(2)) + "; y =")
+plt.title("r = " + str(wPDpDk_value.round(2)) + "; y =" + str(rLDpDk_a.round(1))+ "x + " + str(rLDpDk_b.round(1)))
 plt.xlabel('Długość działki kielicha (cm)')
 plt.ylabel('Długość płatka (cm)')
+plt.plot(wPDpDk['Długość działki kielicha (cm)'], rLDpDk_line, color = "r")
 plt.show()
 
 # Wykres punktowy (długość płatka i szerokość działki kielicha)
-plt.scatter(wPDpSZk['Długość płatka (cm)'], wPDpSZk['Szerokość działki kielicha (cm)'], marker='o')
-plt.title("r = " + str(wPDpSZk_value.round(2)) + "; y =")
+plt.scatter(wPDpSZk['Szerokość działki kielicha (cm)'],wPDpSZk['Długość płatka (cm)'], marker='o')
+plt.title("r = " + str(wPDpSZk_value.round(2)) + "; y ="+ str(rLDpSZk_a.round(1))+ "x + " + str(rLDpSZk_b.round(1)))
 plt.xlabel('Szerokość działki kielicha (cm)')
 plt.ylabel('Długość płatka (cm)')
+plt.plot( wPDpSZk['Szerokość działki kielicha (cm)'], rLDpSZk_line, color = "r")
 plt.show()
 
 # Wykres punktowy (długość płatka i szerokość płatka)
 plt.scatter(wPDpSZp['Długość płatka (cm)'], wPDpSZp['Szerokość płatka (cm)'], marker='o')
-plt.title("r = " + str(wPDpSZp_value.round(2)) + "; y =")
+plt.title("r = " + str(wPDpSZp_value.round(2)) + "; y ="+ str(rLDpSZp_a.round(1))+ "x + " + str(rLDpSZp_b.round(1)))
 plt.xlabel('Długość płatka (cm)')
 plt.ylabel('Szerokość płatka (cm)')
+plt.plot( wPDpSZp['Długość płatka (cm)'], rLDpSZp_line, color = "r")
 plt.show()
-#########
