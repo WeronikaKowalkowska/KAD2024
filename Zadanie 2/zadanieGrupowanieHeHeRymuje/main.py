@@ -13,6 +13,27 @@ import sklearn.cluster as cluster
 dane = pd.read_csv('data2.csv',
                    header = None,
                    names = ['Sepal length', 'Sepal width', 'Petal length', 'Petal width'])
+dlKielicha = np.array(dane['Sepal length'])
+szerKielicha = np.array(dane['Sepal width'])
+dlPlatka = np.array(dane['Petal length'])
+szerPlatka = np.array(dane['Petal width'])
+
+def normalize (what):
+    x_min=min(what)
+    x_max=max(what)
+    for i in range(len(what)):
+        what[i]=(what[i]-x_min)/(x_max-x_min)
+    return what
+
+normalize(dlKielicha)
+normalize(szerKielicha)
+normalize(dlPlatka)
+normalize(szerPlatka)
+
+
+
+
+
 kmeans=cluster.KMeans(n_clusters=3,init='k-means++')
 #kmeans=kmeans.fit(dane)
 kmeans=kmeans.fit(dane[['Sepal length','Petal length']])
