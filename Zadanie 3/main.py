@@ -1,7 +1,12 @@
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
-from sklearn.cluster import KMeans
+#from sklearn.cluster import KMeans
+#from sklearn.preprocessing import MinMaxScaler
+#from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report
 
 #odczyt danych z plików csv
 daneTestowe = pd.read_csv('data3_test.csv',
@@ -41,8 +46,8 @@ znormalizowaneDaneTreningowe['Sepal width'], xMinSzerKielichaTrening, xMaxSzerKi
 znormalizowaneDaneTreningowe['Petal length'], xMinDlPlatkaTrening, xMaxDlPlatkaTrening=normaliseTrainingData(dlPlatkaTrening)
 znormalizowaneDaneTreningowe['Petal width'], xMinSzerPlatkaTrening, xMaxSzerPlatkaTrening=normaliseTrainingData(szerPlatkaTrening)
 
-print(daneTreningowe)
-print(znormalizowaneDaneTreningowe)
+#print(daneTreningowe)
+#print(znormalizowaneDaneTreningowe)
 #print(xMinDlKielichaTrening, xMaxDlKielichaTrening)
 
 def normaliseTestData(what, xMin, xMax):
@@ -55,7 +60,23 @@ znormalizowaneDaneTestowe['Sepal width']=normaliseTestData(szerKielichaTest, xMi
 znormalizowaneDaneTestowe['Petal length']=normaliseTestData(dlPlatkaTest, xMinDlPlatkaTrening, xMaxDlPlatkaTrening)
 znormalizowaneDaneTestowe['Petal width']=normaliseTestData(szerPlatkaTest, xMinSzerPlatkaTrening, xMaxSzerPlatkaTrening)
 
-print(daneTestowe)
-print (znormalizowaneDaneTestowe)
+#(daneTestowe)
+#print (znormalizowaneDaneTestowe)
 
-
+#zademonstrować działanie algorytmu k-NN w oparciu o odpowiednio zmodyfikowany zbiór irysów,
+# zawierający obiekty z trzech klas: setosa, versicolor i virginica
+# uwzględnić normalizację danych
+knn=KNeighborsClassifier(n_neighbors=5)
+gatunekTreningowy=znormalizowaneDaneTreningowe['Species']
+gatunekTestowy=znormalizowaneDaneTestowe['Species']
+knn.fit(znormalizowaneDaneTreningowe,gatunekTreningowy)
+print(gatunekTreningowy)
+print(gatunekTestowy)
+przewidywanyGatunekTestowy=knn.predict(znormalizowaneDaneTestowe)
+print(gatunekTreningowy)
+print(przewidywanyGatunekTestowy)
+macierzPomylekKlasyfikacji=confusion_matrix(gatunekTestowy,przewidywanyGatunekTestowy)
+print(macierzPomylekKlasyfikacji)
+raport=classification_report(gatunekTestowy,przewidywanyGatunekTestowy)
+print(raport)
+#print(knn.score(znormalizowaneDaneTestowe,gatunekTestowy))
