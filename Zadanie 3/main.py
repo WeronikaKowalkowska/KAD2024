@@ -70,20 +70,22 @@ knn=KNeighborsClassifier(n_neighbors=5)
 gatunekTreningowy=znormalizowaneDaneTreningowe['Species']
 gatunekTestowy=znormalizowaneDaneTestowe['Species']
 
-daneTreningowe = znormalizowaneDaneTreningowe.drop(columns=['Species'])
-daneTestowe = znormalizowaneDaneTestowe.drop(columns=['Species'])
+znormalizowaneDaneTreningowe=znormalizowaneDaneTreningowe.drop(columns=['Species'])
+znormalizowaneDaneTestowe=znormalizowaneDaneTestowe.drop(columns=['Species'])
+#print(znormalizowaneDaneTreningowe)
+#print(znormalizowaneDaneTestowe)
 
-knn.fit(daneTreningowe,gatunekTreningowy)
-print(gatunekTreningowy)
-print(gatunekTestowy)
+knn.fit(znormalizowaneDaneTreningowe,gatunekTreningowy)
+#print(gatunekTreningowy)
+#print(gatunekTestowy)
 
-przewidywanyGatunekTestowy=knn.predict(daneTestowe)
-print(gatunekTreningowy)
-print(przewidywanyGatunekTestowy)
+przewidywanyGatunekTestowy=knn.predict(znormalizowaneDaneTestowe)
+#print(gatunekTreningowy)
+#print(przewidywanyGatunekTestowy)
 
-macierzPomylekKlasyfikacji=confusion_matrix(gatunekTestowy,przewidywanyGatunekTestowy)
-print(macierzPomylekKlasyfikacji)
-raport=classification_report(gatunekTestowy,przewidywanyGatunekTestowy)
-print(raport)
+#macierzPomylekKlasyfikacji=confusion_matrix(gatunekTestowy,przewidywanyGatunekTestowy)
+#print(macierzPomylekKlasyfikacji)
+#raport=classification_report(gatunekTestowy,przewidywanyGatunekTestowy)
+#print(raport)
 
 #print(knn.score(znormalizowaneDaneTestowe,gatunekTestowy))
