@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 #from sklearn.cluster import KMeans
 #from sklearn.preprocessing import MinMaxScaler
 #from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, accuracy_score, ConfusionMatrixDisplay
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report
 
@@ -20,9 +20,6 @@ daneTreningowe = pd.read_csv('data3_train.csv',
 #normalizacja danych
 znormalizowaneDaneTestowe=daneTestowe.copy()
 znormalizowaneDaneTreningowe=daneTreningowe.copy()
-
-#print(daneTestowe)
-#print(znormalizowaneDaneTestowe)
 
 dlKielichaTrening = np.array(znormalizowaneDaneTreningowe['Sepal length'])
 szerKielichaTrening = np.array(znormalizowaneDaneTreningowe['Sepal width'])
@@ -46,10 +43,6 @@ znormalizowaneDaneTreningowe['Sepal width'], xMinSzerKielichaTrening, xMaxSzerKi
 znormalizowaneDaneTreningowe['Petal length'], xMinDlPlatkaTrening, xMaxDlPlatkaTrening=normaliseTrainingData(dlPlatkaTrening)
 znormalizowaneDaneTreningowe['Petal width'], xMinSzerPlatkaTrening, xMaxSzerPlatkaTrening=normaliseTrainingData(szerPlatkaTrening)
 
-#print(daneTreningowe)
-#print(znormalizowaneDaneTreningowe)
-#print(xMinDlKielichaTrening, xMaxDlKielichaTrening)
-
 def normaliseTestData(what, xMin, xMax):
     for i in range(len(what)):
         what[i]=(what[i]-xMin)/(xMax-xMin)
@@ -60,32 +53,52 @@ znormalizowaneDaneTestowe['Sepal width']=normaliseTestData(szerKielichaTest, xMi
 znormalizowaneDaneTestowe['Petal length']=normaliseTestData(dlPlatkaTest, xMinDlPlatkaTrening, xMaxDlPlatkaTrening)
 znormalizowaneDaneTestowe['Petal width']=normaliseTestData(szerPlatkaTest, xMinSzerPlatkaTrening, xMaxSzerPlatkaTrening)
 
-#(daneTestowe)
-#print (znormalizowaneDaneTestowe)
+#zademonstrować działanie algorytmu k-NN dla k od 1 do 15 w oparciu o odpowiednio zmodyfikowany zbiór irysów,
+#zawierający obiekty z trzech klas: setosa, versicolor i virginica;
+#uwzględnić normalizację danych
 
-#zademonstrować działanie algorytmu k-NN w oparciu o odpowiednio zmodyfikowany zbiór irysów,
-# zawierający obiekty z trzech klas: setosa, versicolor i virginica
-# uwzględnić normalizację danych
-knn=KNeighborsClassifier(n_neighbors=5)
+dokladnoscWynikiWprocentach = []
+kRange = np.arange(1, 16, 1)
+
+najlepszeK = None
+najlepszaDokladnosc = 0
+macierzPomylekKlasyfikacjiNajlepszeK = None
+
 gatunekTreningowy=znormalizowaneDaneTreningowe['Species']
 gatunekTestowy=znormalizowaneDaneTestowe['Species']
 
 znormalizowaneDaneTreningowe=znormalizowaneDaneTreningowe.drop(columns=['Species'])
 znormalizowaneDaneTestowe=znormalizowaneDaneTestowe.drop(columns=['Species'])
-#print(znormalizowaneDaneTreningowe)
-#print(znormalizowaneDaneTestowe)
 
-knn.fit(znormalizowaneDaneTreningowe,gatunekTreningowy)
-#print(gatunekTreningowy)
-#print(gatunekTestowy)
+for k in kRange:
+    knn=KNeighborsClassifier(n_neighbors=k)
+    knn.fit(znormalizowaneDaneTreningowe, gatunekTreningowy)
+    przewidywanyGatunekTestowy = knn.predict(znormalizowaneDaneTestowe)
+    dokladnosc = accuracy_score(gatunekTestowy, przewidywanyGatunekTestowy)
+    dokladnoscWynikiWprocentach.append(dokladnosc * 100)
 
-przewidywanyGatunekTestowy=knn.predict(znormalizowaneDaneTestowe)
-#print(gatunekTreningowy)
-#print(przewidywanyGatunekTestowy)
+    if dokladnosc > najlepszaDokladnosc:
+        najlepszeK = k
+        najlepszaDokladnosc = dokladnosc
+        macierzPomylekKlasyfikacjiNajlepszeK = confusion_matrix(gatunekTestowy,przewidywanyGatunekTestowy)
 
-#macierzPomylekKlasyfikacji=confusion_matrix(gatunekTestowy,przewidywanyGatunekTestowy)
-#print(macierzPomylekKlasyfikacji)
-#raport=classification_report(gatunekTestowy,przewidywanyGatunekTestowy)
-#print(raport)
 
-#print(knn.score(znormalizowaneDaneTestowe,gatunekTestowy))
+plt.bar(kRange, dokladnoscWynikiWprocentach)
+plt.xticks(kRange)
+plt.yticks(np.arange(90, 102, 2))
+plt.xlabel("Liczba sąsiadów (k)")
+plt.ylabel("Dokładność (%)")
+plt.title("Dokładność klasyfikacji k-NN w zależności od liczby sąsiadów")
+plt.ylim(90, 100)
+plt.show()
+
+#Mecierz pomyłek dla klasyfikatora o największej dokładności - na podstawie 4 cech
+disp = ConfusionMatrixDisplay(confusion_matrix=macierzPomylekKlasyfikacjiNajlepszeK, display_labels=['Setosa', 'Versicolor', 'Virginica'])
+disp.plot(cmap='Blues', colorbar=False)
+plt.title("Mecierz pomyłek dla klasyfikatora o największej dokładności\n na podstawie czterech cech (k = " + str(najlepszeK) + " )")
+plt.xlabel("Rozpoznana klasa")
+plt.ylabel('Faktyczna klasa')
+plt.show()
+
+
+
