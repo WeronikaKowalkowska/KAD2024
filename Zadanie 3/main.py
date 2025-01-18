@@ -85,20 +85,72 @@ for k in kRange:
 
 plt.bar(kRange, dokladnoscWynikiWprocentach)
 plt.xticks(kRange)
-plt.yticks(np.arange(90, 102, 2))
+# plt.yticks(np.arange(90, 102, 2))
 plt.xlabel("Liczba sąsiadów (k)")
 plt.ylabel("Dokładność (%)")
 plt.title("Dokładność klasyfikacji k-NN w zależności od liczby sąsiadów")
-plt.ylim(90, 100)
+# plt.ylim(90, 100)
 plt.show()
 
-#Mecierz pomyłek dla klasyfikatora o największej dokładności - na podstawie 4 cech
+#macierz pomyłek dla klasyfikatora o największej dokładności - na podstawie 4 cech
 disp = ConfusionMatrixDisplay(confusion_matrix=macierzPomylekKlasyfikacjiNajlepszeK, display_labels=['Setosa', 'Versicolor', 'Virginica'])
 disp.plot(cmap='Blues', colorbar=False)
-plt.title("Mecierz pomyłek dla klasyfikatora o największej dokładności\n na podstawie czterech cech (k = " + str(najlepszeK) + " )")
+plt.title("Mecierz pomyłek dla klasyfikatora o największej dokładności (k = " + str(najlepszeK) + " )\n na podstawie czterech cech")
 plt.xlabel("Rozpoznana klasa")
 plt.ylabel('Faktyczna klasa')
 plt.show()
 
+#algorytm k-NN dla par cech
+
+def knnForPairs(tableTren, tableTest, gatunekTreningowy, gatunekTestowy, kRange):
+    najlepszeK = None
+    najlepszaDokladnosc = 0
+    dokladnoscWynikiWprocentach = []
+    macierzPomylekKlasyfikacjiNajlepszeK = None
+
+    for k in kRange:
+        knn = KNeighborsClassifier(n_neighbors=k)
+        knn.fit(tableTren, gatunekTreningowy)
+        przewidywanyGatunekTestowy = knn.predict(tableTest)
+        dokladnosc = accuracy_score(gatunekTestowy, przewidywanyGatunekTestowy)
+        dokladnoscWynikiWprocentach.append(dokladnosc * 100)
+
+        if dokladnosc > najlepszaDokladnosc:
+            najlepszeK = k
+            najlepszaDokladnosc = dokladnosc
+            macierzPomylekKlasyfikacjiNajlepszeK = confusion_matrix(gatunekTestowy, przewidywanyGatunekTestowy)
+
+    return dokladnoscWynikiWprocentach, macierzPomylekKlasyfikacjiNajlepszeK, najlepszeK
+
+def plotAndMatrix(kRange, dokladnoscWynikiWprocentach, macierzPomylek, najlepszeK, string):
+    plt.bar(kRange, dokladnoscWynikiWprocentach)
+    plt.xticks(kRange)
+    plt.xlabel("Liczba sąsiadów (k)")
+    plt.ylabel("Dokładność (%)")
+    plt.title("Dokładność klasyfikacji k-NN w zależności od liczby sąsiadów\n" + string)
+    plt.ylim(65, 100)
+    plt.show()
+
+    disp = ConfusionMatrixDisplay(confusion_matrix=macierzPomylek, display_labels=['Setosa', 'Versicolor', 'Virginica'])
+    disp.plot(cmap='Blues', colorbar=False)
+    plt.title("Mecierz pomyłek dla klasyfikatora o największej dokładności (k = " + str(najlepszeK) + " )\n" + string)
+    plt.xlabel("Rozpoznana klasa")
+    plt.ylabel('Faktyczna klasa')
+    plt.show()
 
 
+#Długość działki kielicha, Szerokość działki kielicha
+dlKielichaSzerKielichaTereningowy = znormalizowaneDaneTreningowe[['Sepal length', 'Sepal width']]
+dlKielichaSzerKielichaTestowy = znormalizowaneDaneTestowe[['Sepal length', 'Sepal width']]
+dlKielichaSzerKielichaString = "(Długość działki kielicha, Szerokość działki kielicha)"
+
+dokladnoscDlKielichaSzerKielicha, macierzPomylekDlKielichaSzerKielicha, najlepszeKDlKielichaSzerKielicha = knnForPairs(dlKielichaSzerKielichaTereningowy, dlKielichaSzerKielichaTestowy, gatunekTreningowy, gatunekTestowy, kRange)
+plotAndMatrix(kRange, dokladnoscDlKielichaSzerKielicha, macierzPomylekDlKielichaSzerKielicha, najlepszeKDlKielichaSzerKielicha, dlKielichaSzerKielichaString)
+
+#Długość działki kielicha, Szerokość płatka
+dlKielichaSzerPlatkaTereningowy = znormalizowaneDaneTreningowe[['Sepal length', 'Petal width']]
+dlKielichaSzerPlatkaTestowy = znormalizowaneDaneTestowe[['Sepal length', 'Petal width']]
+dlKielichaSzerPlatkaString = "(Długość działki kielicha, Szerokość płatka)"
+
+dokladnoscDlKielichaSzerPlatka, macierzPomylekDlKielichaSzerPlatka, najlepszeKDlKielichaSzerPlatka = knnForPairs(dlKielichaSzerPlatkaTereningowy, dlKielichaSzerPlatkaTestowy, gatunekTreningowy, gatunekTestowy, kRange)
+plotAndMatrix(kRange, dokladnoscDlKielichaSzerPlatka, macierzPomylekDlKielichaSzerPlatka, najlepszeKDlKielichaSzerPlatka, dlKielichaSzerPlatkaString)
