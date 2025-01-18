@@ -10,12 +10,12 @@ from sklearn.metrics import classification_report
 
 #odczyt danych z plików csv
 daneTestowe = pd.read_csv('data3_test.csv',
-                   header = None,
-                   names = ['Sepal length', 'Sepal width', 'Petal length', 'Petal width', 'Species'])
-
-daneTreningowe = pd.read_csv('data3_train.csv',
                           header = None,
                           names = ['Sepal length', 'Sepal width', 'Petal length', 'Petal width', 'Species'])
+
+daneTreningowe = pd.read_csv('data3_train.csv',
+                             header = None,
+                             names = ['Sepal length', 'Sepal width', 'Petal length', 'Petal width', 'Species'])
 
 #normalizacja danych
 znormalizowaneDaneTestowe=daneTestowe.copy()
@@ -144,13 +144,65 @@ dlKielichaSzerKielichaTereningowy = znormalizowaneDaneTreningowe[['Sepal length'
 dlKielichaSzerKielichaTestowy = znormalizowaneDaneTestowe[['Sepal length', 'Sepal width']]
 dlKielichaSzerKielichaString = "(Długość działki kielicha, Szerokość działki kielicha)"
 
-dokladnoscDlKielichaSzerKielicha, macierzPomylekDlKielichaSzerKielicha, najlepszeKDlKielichaSzerKielicha = knnForPairs(dlKielichaSzerKielichaTereningowy, dlKielichaSzerKielichaTestowy, gatunekTreningowy, gatunekTestowy, kRange)
-plotAndMatrix(kRange, dokladnoscDlKielichaSzerKielicha, macierzPomylekDlKielichaSzerKielicha, najlepszeKDlKielichaSzerKielicha, dlKielichaSzerKielichaString)
+#dokladnoscDlKielichaSzerKielicha, macierzPomylekDlKielichaSzerKielicha, najlepszeKDlKielichaSzerKielicha = knnForPairs(
+#    dlKielichaSzerKielichaTereningowy, dlKielichaSzerKielichaTestowy, gatunekTreningowy, gatunekTestowy, kRange)
+#dokladnoscDlKielichaSzerKielicha, macierzPomylekDlKielichaSzerKielicha, najlepszeKDlKielichaSzerKielicha = knnForPairs(
+#    znormalizowaneDaneTreningowe, dlKielichaSzerKielichaTestowy, gatunekTreningowy, gatunekTestowy, kRange)
+#cechyTereningoweDlaPary = znormalizowaneDaneTreningowe[['Sepal length', 'Petal width']]
+#cechyTestoweDlaPary = znormalizowaneDaneTestowe[['Sepal length', 'Petal width']]
+#stringOpisDlaPary = "(Długość działki kielicha, Szerokość płatka)"
+dokladnoscDlaPary, macierzPomylekDlaPary, najlepszeKDlaPary = knnForPairs(
+    znormalizowaneDaneTreningowe[['Sepal length', 'Petal width']],
+    znormalizowaneDaneTestowe[['Sepal length', 'Petal width']],
+    gatunekTreningowy,
+    gatunekTestowy,
+    kRange
+)
+# Rysowanie wykresów oraz macierzy pomyłek
+plotAndMatrix(kRange, dokladnoscDlaPary, macierzPomylekDlaPary, najlepszeKDlaPary, 'Długość działki kielicha, Szerokość płatka')
+#plotAndMatrix(kRange, dokladnoscDlKielichaSzerKielicha, macierzPomylekDlKielichaSzerKielicha, najlepszeKDlKielichaSzerKielicha, dlKielichaSzerKielichaString)
 
 #Długość działki kielicha, Szerokość płatka
 dlKielichaSzerPlatkaTereningowy = znormalizowaneDaneTreningowe[['Sepal length', 'Petal width']]
 dlKielichaSzerPlatkaTestowy = znormalizowaneDaneTestowe[['Sepal length', 'Petal width']]
 dlKielichaSzerPlatkaString = "(Długość działki kielicha, Szerokość płatka)"
 
-dokladnoscDlKielichaSzerPlatka, macierzPomylekDlKielichaSzerPlatka, najlepszeKDlKielichaSzerPlatka = knnForPairs(dlKielichaSzerPlatkaTereningowy, dlKielichaSzerPlatkaTestowy, gatunekTreningowy, gatunekTestowy, kRange)
+dokladnoscDlKielichaSzerPlatka, macierzPomylekDlKielichaSzerPlatka, najlepszeKDlKielichaSzerPlatka = knnForPairs(
+    dlKielichaSzerPlatkaTereningowy, dlKielichaSzerPlatkaTestowy, gatunekTreningowy, gatunekTestowy, kRange)
 plotAndMatrix(kRange, dokladnoscDlKielichaSzerPlatka, macierzPomylekDlKielichaSzerPlatka, najlepszeKDlKielichaSzerPlatka, dlKielichaSzerPlatkaString)
+
+
+#####
+
+#X- Długość działki kielicha ; Y- Długość płatka
+dokladnoscDlaPary, macierzPomylekDlaPary, najlepszeKDlaPary = knnForPairs(
+    znormalizowaneDaneTreningowe[['Sepal length', 'Petal length']],
+    znormalizowaneDaneTestowe[['Sepal length', 'Petal length']],
+    gatunekTreningowy,
+    gatunekTestowy,
+    kRange
+)
+plotAndMatrix(kRange, dokladnoscDlaPary, macierzPomylekDlaPary, najlepszeKDlaPary, 'Długość działki kielicha; Długość płatka')
+
+#X- Szerokość dziłki kielicha ; Y- Długość płatka
+dokladnoscDlaPary, macierzPomylekDlaPary, najlepszeKDlaPary = knnForPairs(
+    znormalizowaneDaneTreningowe[['Sepal width', 'Petal length']],
+    znormalizowaneDaneTestowe[['Sepal width', 'Petal length']],
+    gatunekTreningowy,
+    gatunekTestowy,
+    kRange
+)
+plotAndMatrix(kRange, dokladnoscDlaPary, macierzPomylekDlaPary, najlepszeKDlaPary, 'Szerokość działki kielicha; Długość płatka')
+
+
+#X- Długość płatka ; Y- Szerokość płatka
+dokladnoscDlaPary, macierzPomylekDlaPary, najlepszeKDlaPary = knnForPairs(
+    znormalizowaneDaneTreningowe[['Petal length', 'Petal width']],
+    znormalizowaneDaneTestowe[['Petal length', 'Petal width']],
+    gatunekTreningowy,
+    gatunekTestowy,
+    kRange
+)
+plotAndMatrix(kRange, dokladnoscDlaPary, macierzPomylekDlaPary, najlepszeKDlaPary, 'Długość płatka; Szerokość płatka')
+
+
